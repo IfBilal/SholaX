@@ -189,13 +189,15 @@ sholax/
 │   ├── (public)/                 # Public marketing pages (no auth required)
 │   │   ├── page.tsx              # Home page
 │   │   ├── ad-system/
-│   │   │   └── page.tsx          # Client Acquisition & Ad System page
+│   │   │   └── page.tsx          # Ad System page
+│   │   ├── automations/
+│   │   │   └── page.tsx          # Automations page (9 system cards + demo previews)
 │   │   ├── dashboard/
 │   │   │   └── page.tsx          # THE dashboard (one page, 3 states)
 │   │   ├── insights/
 │   │   │   └── page.tsx          # Insights page
 │   │   ├── library/
-│   │   │   └── page.tsx          # Library page (UI only)
+│   │   │   └── page.tsx          # Compatibility redirect → /automations
 │   │   └── book-a-call/
 │   │       └── page.tsx          # Book a Call page with Calendly
 │   ├── (auth)/                   # Auth pages
@@ -293,11 +295,12 @@ Next.js (Vercel)
 
 | Page | Route | Auth Required | Description |
 |------|-------|---------------|-------------|
-| Home | `/` | No | Landing page, introduces SholaX |
-| Ad System | `/ad-system` | No | Explains SholaX's service and process |
+| Home | `/` | No | Landing page with Automations preview + `View Automations →` CTA |
+| Ad System | `/ad-system` | No | Focused on enquiries, ad performance, and optimisation |
+| Automations | `/automations` | No | 9 automation systems with lightweight demo previews and `Implement For Your Business →` CTAs |
 | Dashboard | `/dashboard` | No (but changes by state) | The main client portal |
 | Insights | `/insights` | No | Tips, case studies, content |
-| Library | `/library` | No | UI only, no backend |
+| Library | `/library` | No | Compatibility route that redirects to `/automations` |
 | Book a Call | `/book-a-call` | No | Video placeholder + Calendly embed |
 | Login | `/login` | No | Email/password login |
 | Onboarding | `/onboarding` | Yes (new users) | 4-step onboarding flow |
