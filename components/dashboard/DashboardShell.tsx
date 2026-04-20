@@ -17,7 +17,7 @@ export default async function DashboardShell() {
 
   if (!user) {
     return (
-      <main className="mx-auto w-full max-w-7xl flex-1 space-y-6 px-4 py-10">
+      <main className="mx-auto w-full max-w-375 flex-1 space-y-6 px-4 py-10 md:px-6 lg:px-8">
         <TopMessageBanner visible message={DEFAULT_MESSAGE} />
         <PlatformSection
           title="Meta Ads (Facebook & Instagram)"
@@ -36,9 +36,9 @@ export default async function DashboardShell() {
 
   if (!profile?.is_onboarded) {
     return (
-      <main className="mx-auto w-full max-w-7xl flex-1 space-y-6 px-4 py-10">
+      <main className="mx-auto w-full max-w-375 flex-1 space-y-6 px-4 py-10 md:px-6 lg:px-8">
         <TopMessageBanner visible message={DEFAULT_MESSAGE} />
-        <div className="inline-flex rounded-full border border-yellow-500/40 bg-yellow-500/10 px-3 py-1 text-xs text-yellow-300">
+        <div className="inline-flex rounded-full border border-amber-500/40 bg-amber-500/10 px-3 py-1 text-xs text-amber-300">
           Preview Mode
         </div>
         <PlatformSection
@@ -65,7 +65,7 @@ export default async function DashboardShell() {
   const topMessage = metaData.top_message || DEFAULT_MESSAGE;
 
   return (
-    <main className="mx-auto w-full max-w-7xl flex-1 space-y-6 px-4 py-10">
+    <main className="mx-auto w-full max-w-375 flex-1 space-y-6 px-4 py-10 md:px-6 lg:px-8">
       <TopMessageBanner visible={topMessageVisible} message={topMessage} />
       <PlatformSection title="Meta Ads (Facebook & Instagram)" data={metaData} />
       <PlatformSection title="Google Ads" data={googleData} />

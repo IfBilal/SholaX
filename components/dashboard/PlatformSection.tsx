@@ -18,8 +18,8 @@ interface PlatformSectionProps {
 
 export default function PlatformSection({ title, data }: PlatformSectionProps) {
   return (
-    <section className="space-y-5 rounded-2xl border border-white/10 bg-zinc-950/50 p-4 md:p-6">
-      <h2 className="text-2xl font-semibold text-white">{title}</h2>
+    <section className="space-y-5 rounded-3xl border border-(--border-subtle) bg-surface-1 p-4 md:p-6">
+      <h2 className="text-2xl font-medium tracking-[-0.01em] text-primary">{title}</h2>
 
       <TopStrip data={data} />
       <CoreMetrics data={data} />

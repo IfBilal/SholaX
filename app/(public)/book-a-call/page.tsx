@@ -1,26 +1,79 @@
+import Link from "next/link";
+import Button from "@/components/ui/Button";
+import Card from "@/components/ui/Card";
+import Container from "@/components/ui/Container";
+import Eyebrow from "@/components/ui/Eyebrow";
+import Section from "@/components/ui/Section";
+
+const callAgenda = [
+  "Audit your current lead flow and bottlenecks",
+  "Review ad performance and CPL efficiency",
+  "Map a 30-day automation + follow-up plan",
+];
+
 export default function BookACallPage() {
   return (
-    <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-12">
-      <section className="rounded-2xl border border-white/10 bg-linear-to-b from-zinc-900 to-black p-6 md:p-8">
-        <h1 className="text-4xl font-semibold text-white">Book a Call</h1>
-        <p className="mt-4 text-zinc-300">
-          Let&apos;s review your growth goals and acquisition roadmap.
-        </p>
-      </section>
+    <main className="flex-1">
+      <Section className="pt-18 md:pt-24">
+        <Container size="2xl">
+          <div className="rounded-3xl border border-(--border-subtle) bg-surface-1 p-8 md:p-12">
+            <Eyebrow>BOOK A CALL</Eyebrow>
+            <h1 className="mt-3 text-5xl font-medium tracking-[-0.03em] text-primary md:text-7xl">
+              Build your next growth sprint.
+            </h1>
+            <p className="mt-4 max-w-3xl text-lg text-secondary">
+              A focused strategy call to diagnose leaks, improve conversion rate, and define
+              concrete next actions.
+            </p>
+          </div>
+        </Container>
+      </Section>
 
-      <section className="mt-8 rounded-xl border border-white/10 bg-zinc-900/60 p-4">
-        <div className="flex aspect-video items-center justify-center rounded-lg border border-dashed border-white/20 bg-black text-zinc-400">
-          Video Placeholder (16:9)
-        </div>
-      </section>
+      <Section>
+        <Container size="2xl">
+          <div className="grid gap-4 md:grid-cols-3">
+            {callAgenda.map((item, index) => (
+              <Card key={item} className="p-6">
+                <p className="font-mono text-xs text-tertiary">0{index + 1}</p>
+                <p className="mt-3 text-sm text-secondary">{item}</p>
+              </Card>
+            ))}
+          </div>
+        </Container>
+      </Section>
 
-      <section className="mt-8 overflow-hidden rounded-xl border border-white/10 bg-zinc-900/60 p-3">
-        <iframe
-          title="Calendly Booking"
-          src="https://calendly.com/contact-sholax/30min"
-          className="h-190 w-full rounded-lg bg-white"
-        />
-      </section>
+      <Section className="bg-subtle/35">
+        <Container size="2xl">
+          <div className="overflow-hidden rounded-3xl border border-(--border-subtle) bg-surface-1 p-3">
+            <iframe
+              title="Calendly Booking"
+              src="https://calendly.com/contact-sholax/30min"
+              className="h-190 w-full rounded-2xl bg-white"
+            />
+          </div>
+        </Container>
+      </Section>
+
+      <Section>
+        <Container size="lg" className="text-center">
+          <h2 className="text-3xl font-medium tracking-[-0.02em] text-primary md:text-4xl">
+            Already a client and need a performance review?
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-secondary">
+            Use the client dashboard for weekly updates and schedule a dedicated deep-dive call.
+          </p>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <Link href="/dashboard">
+              <Button size="xl" variant="secondary">
+                Open Dashboard
+              </Button>
+            </Link>
+            <Link href="/insights">
+              <Button size="xl">Read Latest Insights</Button>
+            </Link>
+          </div>
+        </Container>
+      </Section>
     </main>
   );
 }

@@ -2,6 +2,36 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Globe, Mail, MessageSquare } from "lucide-react";
+import Container from "@/components/ui/Container";
+import { cn } from "@/lib/cn";
+
+const productLinks = [
+  { href: "/ad-system", label: "Ad System" },
+  { href: "/automations", label: "Automations" },
+  { href: "/insights", label: "Insights" },
+  { href: "/dashboard", label: "Dashboard" },
+];
+
+const companyLinks = [
+  { href: "/insights", label: "About" },
+  { href: "/insights", label: "Case Studies" },
+  { href: "/book-a-call", label: "Contact" },
+  { href: "/book-a-call", label: "Book a Call" },
+];
+
+const resourceLinks = [
+  { href: "/automations", label: "Library" },
+  { href: "/insights", label: "Changelog" },
+  { href: "/insights", label: "Privacy" },
+  { href: "/insights", label: "Terms" },
+];
+
+const socialLinks = [
+  { href: "https://github.com/IfBilal/SholaX", label: "GitHub", icon: Globe },
+  { href: "mailto:contact@sholax.com", label: "Email", icon: Mail },
+  { href: "https://x.com", label: "X", icon: MessageSquare },
+];
 
 export default function Footer() {
   const pathname = usePathname();
@@ -15,24 +45,91 @@ export default function Footer() {
   }
 
   return (
-    <footer className="mt-auto border-t border-white/10 bg-black/70">
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-3 px-4 py-6 text-sm text-zinc-400 md:flex-row md:items-center md:justify-between">
-        <p>© {new Date().getFullYear()} SholaX. All rights reserved.</p>
-        <div className="flex items-center gap-4">
-          <Link href="/ad-system" className="hover:text-zinc-200">
-            Ad System
-          </Link>
-          <Link href="/automations" className="hover:text-zinc-200">
-            Automations
-          </Link>
-          <Link href="/dashboard" className="hover:text-zinc-200">
-            Dashboard
-          </Link>
-          <Link href="/book-a-call" className="hover:text-zinc-200">
-            Book a Call
-          </Link>
+    <footer className="mt-auto border-t border-(--border-subtle) bg-canvas">
+      <Container size="2xl" className="py-16 md:py-20">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <FooterColumn title="Product" links={productLinks} />
+          <FooterColumn title="Company" links={companyLinks} />
+          <FooterColumn title="Resources" links={resourceLinks} />
+
+          <div>
+            <h2 className="text-xs font-medium uppercase tracking-[0.08em] text-tertiary">Subscribe</h2>
+            <p className="mt-3 text-sm text-secondary">Get monthly insights and product updates.</p>
+            <div className="mt-4 flex gap-2">
+              <input
+                type="email"
+                placeholder="you@company.com"
+                className="h-10 flex-1 rounded-md border border-(--border-default) bg-surface-1 px-3 text-sm text-primary placeholder:text-tertiary"
+              />
+              <button
+                type="button"
+                className="h-10 rounded-md bg-accent px-4 text-sm font-medium text-(--text-inverse) transition hover:bg-(--accent-hover)"
+              >
+                Join
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
+
+        <div className="mt-10 flex flex-col gap-4 border-t border-(--border-subtle) pt-6 md:flex-row md:items-center md:justify-between">
+          <div className="flex items-center gap-3">
+            <span className="text-base font-semibold text-primary">SholaX</span>
+            <span className="text-xs text-tertiary">© {new Date().getFullYear()}</span>
+          </div>
+
+          <div className="inline-flex items-center gap-2 rounded-full border border-(--border-subtle) bg-surface-1 px-3 py-1.5 text-xs text-secondary">
+            <span className="inline-flex h-2 w-2 rounded-full bg-(--success) animate-pulse" />
+            All systems operational
+          </div>
+
+          <div className="flex items-center gap-2">
+            {socialLinks.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={item.label}
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-(--border-subtle) text-tertiary transition hover:border-(--border-default) hover:bg-(--overlay-hover) hover:text-primary"
+                >
+                  <Icon className="h-4 w-4" aria-hidden="true" />
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      </Container>
     </footer>
+  );
+}
+
+function FooterColumn({
+  title,
+  links,
+}: {
+  title: string;
+  links: Array<{ href: string; label: string }>;
+}) {
+  return (
+    <div>
+      <h2 className="text-xs font-medium uppercase tracking-[0.08em] text-tertiary">{title}</h2>
+      <ul className="mt-3 space-y-2">
+        {links.map((item) => (
+          <li key={`${title}-${item.label}`}>
+            <Link
+              href={item.href}
+              className={cn(
+                "text-sm text-secondary transition",
+                "hover:text-primary",
+              )}
+            >
+              {item.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }

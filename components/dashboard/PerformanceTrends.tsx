@@ -47,12 +47,12 @@ export default function PerformanceTrends({ data }: PerformanceTrendsProps) {
   ];
 
   return (
-    <article className="rounded-xl border border-white/10 bg-zinc-900/60 p-5">
-      <h3 className="text-lg font-medium text-white">Performance Trends</h3>
-      <p className="mt-1 text-xs text-zinc-400">UI-only trend visualisations</p>
+    <article className="rounded-2xl border border-(--border-subtle) bg-surface-2 p-5">
+      <h3 className="text-lg font-medium text-primary">Performance Trends</h3>
+      <p className="mt-1 text-xs text-tertiary">UI-only trend visualisations</p>
       <div className="mt-3 grid gap-4 lg:grid-cols-3">
-        <div className="h-52 rounded-lg border border-white/5 bg-black/30 p-2">
-          <p className="mb-1 text-xs text-zinc-400">Leads Over Time</p>
+        <div className="h-52 rounded-lg border border-(--border-subtle) bg-canvas/70 p-2">
+          <p className="mb-1 text-xs text-tertiary">Leads Over Time</p>
           <ResponsiveContainer width="100%" height="100%" minWidth={200} minHeight={160}>
             <LineChart data={trendData}>
               <CartesianGrid stroke="#1f2937" strokeDasharray="3 3" />
@@ -64,8 +64,8 @@ export default function PerformanceTrends({ data }: PerformanceTrendsProps) {
           </ResponsiveContainer>
         </div>
 
-        <div className="h-52 rounded-lg border border-white/5 bg-black/30 p-2">
-          <p className="mb-1 text-xs text-zinc-400">Cost Trend</p>
+        <div className="h-52 rounded-lg border border-(--border-subtle) bg-canvas/70 p-2">
+          <p className="mb-1 text-xs text-tertiary">Cost Trend</p>
           <ResponsiveContainer width="100%" height="100%" minWidth={200} minHeight={160}>
             <LineChart data={trendData}>
               <CartesianGrid stroke="#1f2937" strokeDasharray="3 3" />
@@ -77,8 +77,8 @@ export default function PerformanceTrends({ data }: PerformanceTrendsProps) {
           </ResponsiveContainer>
         </div>
 
-        <div className="h-52 rounded-lg border border-white/5 bg-black/30 p-2">
-          <p className="mb-1 text-xs text-zinc-400">Spend vs Results</p>
+        <div className="h-52 rounded-lg border border-(--border-subtle) bg-canvas/70 p-2">
+          <p className="mb-1 text-xs text-tertiary">Spend vs Results</p>
           <ResponsiveContainer width="100%" height="100%" minWidth={200} minHeight={160}>
             <BarChart data={trendData}>
               <CartesianGrid stroke="#1f2937" strokeDasharray="3 3" />

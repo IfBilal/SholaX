@@ -3,21 +3,22 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { Menu, X } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import Button from "@/components/ui/Button";
+import { cn } from "@/lib/cn";
 
 const links = [
-  { href: "/", label: "Home" },
   { href: "/ad-system", label: "Ad System" },
   { href: "/automations", label: "Automations" },
-  { href: "/dashboard", label: "Dashboard" },
   { href: "/insights", label: "Insights" },
-  { href: "/book-a-call", label: "Book a Call" },
 ];
 
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     const supabase = createClient();
@@ -54,29 +55,37 @@ export default function Navbar() {
   async function handleLogout() {
     const supabase = createClient();
     await supabase.auth.signOut();
+    setMobileOpen(false);
     router.push("/");
     router.refresh();
   }
+
+  const dashboardLink = userEmail
+    ? { href: "/dashboard", label: "Dashboard" }
+    : { href: "/login", label: "Login" };
 
   if (isAuthPage) {
     return null;
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-black/80 backdrop-blur">
-      <nav className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3">
-        <Link href="/" className="text-lg font-semibold text-white">
+    <header className="sticky top-0 z-50 border-b border-(--border-subtle) bg-[rgba(10,11,13,0.72)] backdrop-blur-[16px]">
+      <nav className="mx-auto flex h-[72px] w-full max-w-[1440px] items-center justify-between px-5 md:px-8 lg:px-12">
+        <Link href="/" className="text-lg font-semibold text-primary">
           SholaX
         </Link>
 
-        <ul className="hidden items-center gap-4 md:flex">
-          {links.map((link) => (
+        <ul className="hidden items-center gap-1 lg:flex">
+          {[...links, dashboardLink].map((link) => (
             <li key={link.href}>
               <Link
                 href={link.href}
-                className={`text-sm transition ${
-                  pathname === link.href ? "text-white" : "text-zinc-400 hover:text-zinc-200"
-                }`}
+                className={cn(
+                  "rounded-md px-3 py-2 text-sm transition",
+                  pathname === link.href
+                    ? "text-primary"
+                    : "text-secondary hover:bg-(--overlay-hover) hover:text-primary",
+                )}
               >
                 {link.label}
               </Link>
@@ -84,23 +93,68 @@ export default function Navbar() {
           ))}
         </ul>
 
-        {userEmail ? (
-          <button
-            type="button"
-            onClick={handleLogout}
-            className="rounded-lg border border-white/15 px-3 py-1.5 text-sm text-zinc-200 hover:border-white/30"
-          >
-            Logout
-          </button>
-        ) : (
+        <div className="hidden items-center gap-3 lg:flex">
           <Link
-            href="/login"
-            className="rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-500"
+            href="/book-a-call"
+            className="inline-flex h-10 items-center rounded-md bg-accent px-4 text-sm font-medium text-[var(--text-inverse)] transition hover:bg-[var(--accent-hover)]"
           >
-            Login
+            Book a Call →
           </Link>
-        )}
+
+          {userEmail ? (
+            <Button variant="secondary" size="md" onClick={handleLogout}>
+              Logout
+            </Button>
+          ) : null}
+        </div>
+
+        <button
+          type="button"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-(--border-default) text-primary lg:hidden"
+          aria-label={mobileOpen ? "Close menu" : "Open menu"}
+          onClick={() => setMobileOpen((prev) => !prev)}
+        >
+          {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+        </button>
       </nav>
+
+      {mobileOpen ? (
+        <div className="border-t border-(--border-subtle) bg-surface-1 px-5 py-4 lg:hidden">
+          <ul className="space-y-2">
+            {[...links, dashboardLink].map((link) => (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  onClick={() => setMobileOpen(false)}
+                  className={cn(
+                    "block rounded-md px-3 py-3 text-base",
+                    pathname === link.href
+                      ? "bg-accent-muted text-primary"
+                      : "text-secondary hover:bg-(--overlay-hover) hover:text-primary",
+                  )}
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-4 flex gap-2">
+            <Link
+              href="/book-a-call"
+              onClick={() => setMobileOpen(false)}
+              className="inline-flex h-11 flex-1 items-center justify-center rounded-md bg-accent px-4 text-sm font-medium text-[var(--text-inverse)]"
+            >
+              Book a Call →
+            </Link>
+            {userEmail ? (
+              <Button variant="secondary" size="md" className="h-11" onClick={handleLogout}>
+                Logout
+              </Button>
+            ) : null}
+          </div>
+        </div>
+      ) : null}
     </header>
   );
 }
