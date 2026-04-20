@@ -332,9 +332,6 @@ export default function AutomationsPage() {
             <Link href={AUTOMATIONS_CTA.buttonHref}>
               <Button size="xl">{AUTOMATIONS_CTA.buttonLabel}</Button>
             </Link>
-            <Button size="xl" variant="secondary">
-              Download automation catalog
-            </Button>
           </div>
           <p className="mt-5 text-sm text-tertiary">{AUTOMATIONS_CLOSING_LINE}</p>
         </Container>

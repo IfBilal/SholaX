@@ -28,7 +28,6 @@ const resourceLinks = [
 ];
 
 const socialLinks = [
-  { href: "https://github.com/IfBilal/SholaX", label: "GitHub", icon: Globe },
   { href: "mailto:contact@sholax.com", label: "Email", icon: Mail },
   { href: "https://x.com", label: "X", icon: MessageSquare },
 ];
@@ -47,28 +46,10 @@ export default function Footer() {
   return (
     <footer className="mt-auto border-t border-(--border-subtle) bg-canvas">
       <Container size="2xl" className="py-16 md:py-20">
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           <FooterColumn title="Product" links={productLinks} />
           <FooterColumn title="Company" links={companyLinks} />
           <FooterColumn title="Resources" links={resourceLinks} />
-
-          <div>
-            <h2 className="text-xs font-medium uppercase tracking-[0.08em] text-tertiary">Subscribe</h2>
-            <p className="mt-3 text-sm text-secondary">Get monthly insights and product updates.</p>
-            <div className="mt-4 flex gap-2">
-              <input
-                type="email"
-                placeholder="you@company.com"
-                className="h-10 flex-1 rounded-md border border-(--border-default) bg-surface-1 px-3 text-sm text-primary placeholder:text-tertiary"
-              />
-              <button
-                type="button"
-                className="h-10 rounded-md bg-accent px-4 text-sm font-medium text-(--text-inverse) transition hover:bg-(--accent-hover)"
-              >
-                Join
-              </button>
-            </div>
-          </div>
         </div>
 
         <div className="mt-10 flex flex-col gap-4 border-t border-(--border-subtle) pt-6 md:flex-row md:items-center md:justify-between">
