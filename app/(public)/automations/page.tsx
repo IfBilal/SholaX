@@ -205,7 +205,7 @@ export default function AutomationsPage() {
 
   return (
     <main className="flex-1">
-      <Section className="pt-18 md:pt-24">
+      <Section className="py-5 md:py-6">
         <Container size="2xl">
           <div className="rounded-3xl border border-(--border-subtle) bg-surface-1 p-8 md:p-12">
             <Eyebrow>AUTOMATIONS</Eyebrow>

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Globe, Mail, MessageSquare } from "lucide-react";
+import { Mail, MessageSquare } from "lucide-react";
 import Container from "@/components/ui/Container";
 import { cn } from "@/lib/cn";
 
@@ -45,14 +45,14 @@ export default function Footer() {
 
   return (
     <footer className="mt-auto border-t border-(--border-subtle) bg-canvas">
-      <Container size="2xl" className="py-16 md:py-20">
+      <Container size="2xl" className="py-8 md:py-10">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           <FooterColumn title="Product" links={productLinks} />
           <FooterColumn title="Company" links={companyLinks} />
           <FooterColumn title="Resources" links={resourceLinks} />
         </div>
 
-        <div className="mt-10 flex flex-col gap-4 border-t border-(--border-subtle) pt-6 md:flex-row md:items-center md:justify-between">
+        <div className="mt-6 flex flex-col gap-4 border-t border-(--border-subtle) pt-4 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-3">
             <span className="text-base font-semibold text-primary">SholaX</span>
             <span className="text-xs text-tertiary">© {new Date().getFullYear()}</span>

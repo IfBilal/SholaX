@@ -150,7 +150,7 @@ export default function HomePage() {
 
   return (
     <main className="flex-1">
-      <Section className="relative overflow-hidden pb-24 pt-20 md:pt-24 lg:pt-32">
+      <Section className="relative overflow-hidden py-5 md:py-6 lg:py-8">
         <Container size="full" className="relative">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(198,242,78,0.14),transparent_45%)]" />
           <div className="relative rounded-[24px] border border-(--border-subtle) bg-canvas/90 p-8 md:p-12 lg:p-16">
@@ -162,7 +162,7 @@ export default function HomePage() {
               We run paid acquisition and install automation infrastructure that turns every enquiry into a
               tracked, nurtured, and closable opportunity.
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-6 flex flex-wrap gap-3">
               <Link href="/book-a-call">
                 <Button size="xl">Book a Call →</Button>
               </Link>
@@ -170,14 +170,14 @@ export default function HomePage() {
                 <Button size="xl" variant="secondary">See how it works</Button>
               </Link>
             </div>
-            <div className="mt-8 border-t border-(--border-subtle) pt-5 text-sm text-tertiary">
+            <div className="mt-6 border-t border-(--border-subtle) pt-4 text-sm text-tertiary">
               Trusted by operators across SaaS, local services, and agency-led growth teams.
             </div>
           </div>
         </Container>
       </Section>
 
-      <section className="border-y border-(--border-subtle) bg-subtle/40 py-8">
+      <section className="border-y border-(--border-subtle) bg-subtle/40 py-4 md:py-5">
         <Container size="2xl">
           <div className="mb-3 text-xs font-medium uppercase tracking-[0.08em] text-tertiary">
             Operators we ship for
@@ -203,7 +203,7 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="mt-10 grid gap-4 md:grid-cols-3">
+          <div className="mt-8 grid gap-4 md:grid-cols-3">
             {pillars.map((item) => {
               const Icon = item.icon;
               return (

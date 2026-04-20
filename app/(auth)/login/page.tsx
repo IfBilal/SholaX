@@ -69,7 +69,7 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-md flex-1 items-center px-6 py-20">
+    <main className="mx-auto flex w-full max-w-md flex-1 items-center px-6 py-10">
       <div className="w-full rounded-2xl border border-white/10 bg-zinc-900/70 p-6">
         <p className="text-sm text-zinc-400">SholaX</p>
         <h1 className="mt-2 text-2xl font-semibold text-white">

@@ -69,7 +69,7 @@ export default function OnboardingPage() {
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-3xl flex-1 px-6 py-12">
+    <main className="mx-auto flex w-full max-w-3xl flex-1 px-6 py-8">
       <div className="w-full rounded-2xl border border-white/10 bg-zinc-900/70 p-6 md:p-8">
         <p className="text-sm text-zinc-400">SholaX Onboarding</p>
         <h1 className="mt-2 text-2xl font-semibold text-white">Setup in 4 steps</h1>

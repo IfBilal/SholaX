@@ -65,7 +65,7 @@ export default function AdminDashboard() {
   }
 
   return (
-    <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8">
+    <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6">
       <div className="mb-4 flex items-center justify-between">
         <h1 className="text-3xl font-semibold text-white">SholaX Admin</h1>
         <button
