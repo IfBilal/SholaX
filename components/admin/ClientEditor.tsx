@@ -8,10 +8,12 @@ interface ProfileData {
   email: string;
   business_name: string | null;
   is_onboarded: boolean;
+  role: 'user' | 'admin';
 }
 
 interface ClientEditorProps {
   userId: string;
+  viewMode?: "clients" | "admins";
   onRefreshClients: () => Promise<void>;
 }
 
@@ -59,7 +61,7 @@ const NON_NEGATIVE_FIELDS: Array<keyof DashboardData> = [
   "top_ad_cpl",
 ];
 
-export default function ClientEditor({ userId, onRefreshClients }: ClientEditorProps) {
+export default function ClientEditor({ userId, viewMode = "clients", onRefreshClients }: ClientEditorProps) {
   const [activeTab, setActiveTab] = useState<PlatformTab>("meta");
   const [metaData, setMetaData] = useState<DashboardData | null>(null);
   const [googleData, setGoogleData] = useState<DashboardData | null>(null);
@@ -78,6 +80,72 @@ export default function ClientEditor({ userId, onRefreshClients }: ClientEditorP
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  async function promoteToAdmin() {
+    if (!profile || profile.role === 'admin') return;
+    if (!confirm(`Promote ${profile.email} to admin? They will gain full admin access.`)) return;
+    setSaving(true);
+    setError(null);
+    setMessage(null);
+    const response = await fetch('/api/admin/promote', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: profile.id }),
+    });
+    const payload = await response.json();
+    if (!response.ok) {
+      setError(payload.error || 'Failed to promote user');
+      setSaving(false);
+      return;
+    }
+    setMessage('User promoted to admin.');
+    await onRefreshClients();
+    setSaving(false);
+  }
+
+  async function deleteUser() {
+    if (!profile) return;
+    if (!confirm(`Permanently delete ${profile.email}? This cannot be undone.`)) return;
+    setSaving(true);
+    setError(null);
+    setMessage(null);
+    const response = await fetch('/api/admin/remove', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: profile.id }),
+    });
+    const payload = await response.json();
+    if (!response.ok) {
+      setError(payload.error || 'Failed to delete user');
+      setSaving(false);
+      return;
+    }
+    setMessage('User deleted.');
+    await onRefreshClients();
+    setSaving(false);
+  }
+
+  async function deleteAdmin() {
+    if (!profile) return;
+    if (!confirm(`Remove admin ${profile.email} and permanently delete their account? This cannot be undone.`)) return;
+    setSaving(true);
+    setError(null);
+    setMessage(null);
+    const response = await fetch('/api/admin/remove', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: profile.id }),
+    });
+    const payload = await response.json();
+    if (!response.ok) {
+      setError(payload.error || 'Failed to remove admin');
+      setSaving(false);
+      return;
+    }
+    setMessage('Admin removed and deleted.');
+    await onRefreshClients();
+    setSaving(false);
+  }
 
   const activeData = useMemo(() => {
     return activeTab === "meta" ? metaData : googleData;
@@ -245,14 +313,6 @@ export default function ClientEditor({ userId, onRefreshClients }: ClientEditorP
     );
   }
 
-  if (!activeData) {
-    return (
-      <section className="rounded-xl border border-white/10 bg-zinc-900/60 p-4">
-        <p className="text-zinc-300">No data available for this client.</p>
-      </section>
-    );
-  }
-
   function addCampaign() {
     if (!newCampaign.name.trim()) {
       return;
@@ -314,22 +374,68 @@ export default function ClientEditor({ userId, onRefreshClients }: ClientEditorP
 
   return (
     <section className="rounded-xl border border-white/10 bg-zinc-900/60 p-4">
+      {/* Profile header — always visible */}
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div>
           <h2 className="text-lg font-semibold text-white">
             {profile?.business_name || profile?.email || "Client"}
           </h2>
           <p className="text-xs text-zinc-400">{profile?.email}</p>
+          <span className={`mt-1 inline-flex rounded-full px-2 py-0.5 text-xs ${profile?.role === 'admin' ? 'bg-blue-500/15 text-blue-300' : 'bg-zinc-700/40 text-zinc-300'}`}>
+            {profile?.role === 'admin' ? 'Admin' : 'User'}
+          </span>
         </div>
-        <button
-          type="button"
-          onClick={toggleOnboarding}
-          disabled={saving}
-          className="rounded-lg border border-white/20 px-3 py-1.5 text-sm text-zinc-100 hover:border-white/40 disabled:opacity-60"
-        >
-          {profile?.is_onboarded ? "Mark as Not Onboarded" : "Mark as Onboarded"}
-        </button>
+        <div className="flex flex-col gap-2 items-end">
+          {viewMode === 'clients' && (
+            <button
+              type="button"
+              onClick={toggleOnboarding}
+              disabled={saving}
+              className="rounded-lg border border-white/20 px-3 py-1.5 text-sm text-zinc-100 hover:border-white/40 disabled:opacity-60"
+            >
+              {profile?.is_onboarded ? "Mark as Not Onboarded" : "Mark as Onboarded"}
+            </button>
+          )}
+          {viewMode === 'clients' && (
+            <button
+              type="button"
+              onClick={promoteToAdmin}
+              disabled={saving}
+              className="rounded-lg border border-blue-500/40 px-3 py-1.5 text-sm text-blue-200 hover:border-blue-500 disabled:opacity-60"
+            >
+              Promote to Admin
+            </button>
+          )}
+          {viewMode === 'clients' && (
+            <button
+              type="button"
+              onClick={deleteUser}
+              disabled={saving}
+              className="rounded-lg border border-red-500/40 px-3 py-1.5 text-sm text-red-200 hover:border-red-500 disabled:opacity-60"
+            >
+              Delete User
+            </button>
+          )}
+          {viewMode === 'admins' && (
+            <button
+              type="button"
+              onClick={deleteAdmin}
+              disabled={saving}
+              className="rounded-lg border border-red-500/40 bg-red-500/10 px-3 py-1.5 text-sm text-red-200 hover:border-red-500 disabled:opacity-60"
+            >
+              Remove Admin &amp; Delete Account
+            </button>
+          )}
+        </div>
       </div>
+
+      {error ? <p className="mt-3 text-sm text-red-400">{error}</p> : null}
+      {message ? <p className="mt-3 text-sm text-green-400">{message}</p> : null}
+
+      {/* Dashboard editor — only for clients, not admins */}
+      {viewMode === 'clients' && (!activeData ? (
+        <p className="mt-4 text-sm text-zinc-400">No dashboard data available for this client.</p>
+      ) : (<>
 
       <div className="mt-4 flex gap-2">
         <button
@@ -808,9 +914,6 @@ export default function ClientEditor({ userId, onRefreshClients }: ClientEditorP
         </div>
       </div>
 
-      {error ? <p className="mt-3 text-sm text-red-400">{error}</p> : null}
-      {message ? <p className="mt-3 text-sm text-green-400">{message}</p> : null}
-
       <button
         type="button"
         onClick={saveCurrentPlatform}
@@ -819,6 +922,8 @@ export default function ClientEditor({ userId, onRefreshClients }: ClientEditorP
       >
         {saving ? "Saving..." : `Save ${activeTab.toUpperCase()} Changes`}
       </button>
+      </>))}
     </section>
   );
 }
+

@@ -7,11 +7,17 @@ import { createClient } from "@/lib/supabase/client";
 
 export default function LoginPage() {
   const router = useRouter();
+  const queryParams =
+    typeof window === "undefined"
+      ? null
+      : new URLSearchParams(window.location.search);
+
   const redirectPath =
     typeof window === "undefined"
       ? "/dashboard"
-      : new URLSearchParams(window.location.search).get("redirect") ||
-        "/dashboard";
+      : queryParams?.get("redirect") || "/dashboard";
+
+  const confirmationState = queryParams?.get("confirmed");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -32,6 +38,9 @@ export default function LoginPage() {
       const { data, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/confirm?next=/login`,
+        },
       });
 
       if (signUpError) {
@@ -64,8 +73,30 @@ export default function LoginPage() {
       return;
     }
 
-    router.push(redirectPath);
-    router.refresh();
+    // Fetch user profile to determine role
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    console.log("[LOGIN] user after signIn:", user);
+    if (!user) {
+      setError("Could not fetch user after login");
+      setIsLoading(false);
+      return;
+    }
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+    console.log("[LOGIN] profile fetched:", profile, "error:", profileError);
+
+    if (profile && profile.role === "admin") {
+      console.log("[LOGIN] Redirecting to /admin (hard reload)");
+      window.location.href = "/admin";
+    } else {
+      console.log("[LOGIN] Redirecting to", redirectPath);
+      router.push(redirectPath);
+    }
   }
 
   return (
@@ -118,6 +149,16 @@ export default function LoginPage() {
 
           {error ? <p className="text-sm text-red-400">{error}</p> : null}
           {message ? <p className="text-sm text-green-400">{message}</p> : null}
+          {!message && confirmationState === "1" ? (
+            <p className="text-sm text-green-400">
+              Email confirmed successfully. Please log in to continue.
+            </p>
+          ) : null}
+          {!message && confirmationState === "0" ? (
+            <p className="text-sm text-red-400">
+              Email confirmation link is invalid or expired. Please request a new one.
+            </p>
+          ) : null}
 
           <button
             type="submit"

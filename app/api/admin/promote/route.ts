@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createAdminClient, createClient } from "@/lib/supabase/server";
 
-export async function GET(request: Request) {
+export async function POST(request: Request) {
   const supabase = await createClient();
   const {
     data: { user },
@@ -11,6 +11,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
+  // Fetch user profile to check role
   const { data: profile } = await supabase
     .from("profiles")
     .select("role")
@@ -21,25 +22,22 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const roleFilter = new URL(request.url).searchParams.get("role") ?? "user";
-
-  const admin = createAdminClient();
-  let query = admin
-    .from("profiles")
-    .select("id,email,business_name,is_onboarded,created_at,role")
-    .eq("role", roleFilter)
-    .order("created_at", { ascending: false });
-
-  // When listing admins, exclude the requesting admin themselves
-  if (roleFilter === "admin") {
-    query = query.neq("id", user.id);
+  const body = await request.json();
+  const promoteId = String(body.user_id || "").trim();
+  if (!promoteId) {
+    return NextResponse.json({ error: "Missing user_id" }, { status: 400 });
   }
 
-  const { data, error } = await query;
+  // Promote user to admin
+  const admin = createAdminClient();
+  const { error } = await admin
+    .from("profiles")
+    .update({ role: "admin" })
+    .eq("id", promoteId);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  return NextResponse.json({ clients: data ?? [] });
+  return NextResponse.json({ success: true });
 }

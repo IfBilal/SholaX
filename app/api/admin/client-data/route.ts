@@ -7,7 +7,18 @@ export async function GET(request: Request) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user || user.email?.toLowerCase() !== process.env.ADMIN_EMAIL?.toLowerCase()) {
+  if (!user) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
+  // Fetch user profile to check role
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  if (!profile || profile.role !== "admin") {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
@@ -18,12 +29,12 @@ export async function GET(request: Request) {
 
   const admin = createAdminClient();
 
-  const [{ data: rows, error: rowsError }, { data: profile, error: profileError }] =
+  const [{ data: rows, error: rowsError }, { data: clientProfile, error: profileError }] =
     await Promise.all([
       admin.from("dashboard_data").select("*").eq("user_id", userId),
       admin
         .from("profiles")
-        .select("id,email,business_name,is_onboarded,created_at")
+        .select("id,email,business_name,is_onboarded,created_at,role")
         .eq("id", userId)
         .single(),
     ]);
@@ -39,5 +50,5 @@ export async function GET(request: Request) {
   const meta = rows?.find((row) => row.platform === "meta") ?? null;
   const google = rows?.find((row) => row.platform === "google") ?? null;
 
-  return NextResponse.json({ meta, google, profile });
+  return NextResponse.json({ meta, google, profile: clientProfile });
 }

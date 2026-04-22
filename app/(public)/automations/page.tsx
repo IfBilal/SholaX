@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Bot,
   CalendarCheck,
   Filter,
   Mail,
   MessagesSquare,
+  Pause,
   Play,
   RefreshCw,
   ShieldCheck,
@@ -43,7 +44,7 @@ const ICONS = {
 const cardClass =
   "group rounded-2xl border border-(--border-subtle) bg-surface-1 p-5 transition duration-300 hover:-translate-y-0.5 hover:border-(--border-default) hover:bg-surface-2";
 
-const DEFAULT_VOICE_SAMPLE =
+const DEFAULT_VOICE_CAPTION =
   "Hi, thanks for contacting us. We will help you in under sixty seconds.";
 
 function PreviewBlock({
@@ -58,53 +59,52 @@ function PreviewBlock({
   const heading = previewMeta?.heading ?? "Preview";
   const lines = previewMeta?.lines ?? [];
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
+    const audioNode = audioRef.current;
+
     return () => {
-      if (typeof window !== "undefined" && "speechSynthesis" in window) {
-        window.speechSynthesis.cancel();
+      if (audioNode) {
+        audioNode.pause();
+        audioNode.currentTime = 0;
       }
     };
   }, []);
 
   function handleVoiceSampleToggle() {
-    if (typeof window === "undefined" || !("speechSynthesis" in window)) {
+    if (!audioRef.current) {
       return;
     }
 
     if (isSpeaking) {
-      window.speechSynthesis.cancel();
+      audioRef.current.pause();
       setIsSpeaking(false);
       return;
     }
 
-    window.speechSynthesis.cancel();
-
-    const utterance = new SpeechSynthesisUtterance(lines[0] ?? DEFAULT_VOICE_SAMPLE);
-    utterance.rate = 0.95;
-    utterance.pitch = 1;
-    utterance.onend = () => setIsSpeaking(false);
-    utterance.onerror = () => setIsSpeaking(false);
-
-    setIsSpeaking(true);
-    window.speechSynthesis.speak(utterance);
+    void audioRef.current.play();
   }
 
   if (previewType === "audio") {
-    const supportsSpeechSynthesis =
-      typeof window !== "undefined" && "speechSynthesis" in window;
-
     return (
       <div className="rounded-lg border border-(--border-subtle) bg-surface-2 p-3 text-xs text-secondary">
         <p className="mb-2 text-[10px] uppercase tracking-wide text-tertiary">{heading}</p>
+        <audio
+          ref={audioRef}
+          preload="metadata"
+          src="/media/ai-receptionist.mpeg"
+          onPlay={() => setIsSpeaking(true)}
+          onPause={() => setIsSpeaking(false)}
+          onEnded={() => setIsSpeaking(false)}
+        />
         <div className="flex items-center gap-3 rounded-lg border border-(--border-subtle) bg-canvas/70 px-3 py-2">
           <button
             type="button"
             onClick={handleVoiceSampleToggle}
-            disabled={!supportsSpeechSynthesis}
-            className="inline-flex h-7 items-center gap-1 rounded-full border border-(--border-accent) bg-accent-muted px-2 text-[10px] font-medium text-primary disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex h-7 items-center gap-1 rounded-full border border-(--border-accent) bg-accent-muted px-2 text-[10px] font-medium text-primary"
           >
-            <Play className="h-3 w-3" aria-hidden="true" />
+            {isSpeaking ? <Pause className="h-3 w-3" aria-hidden="true" /> : <Play className="h-3 w-3" aria-hidden="true" />}
             {isSpeaking ? "Stop" : "Play"}
           </button>
           <div className="h-1 flex-1 rounded-full bg-surface-3">
@@ -112,7 +112,7 @@ function PreviewBlock({
           </div>
           <span className="text-[10px] text-tertiary">Voice</span>
         </div>
-        {lines[0] ? <p className="mt-2 text-secondary">{lines[0]}</p> : null}
+        <p className="mt-2 text-secondary">{lines[0] ?? DEFAULT_VOICE_CAPTION}</p>
       </div>
     );
   }

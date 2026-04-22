@@ -37,15 +37,20 @@ export default function ClientList({
                 {client.business_name || client.email}
               </p>
               <p className="mt-1 text-xs text-zinc-400">{client.email}</p>
-              <span
-                className={`mt-2 inline-flex rounded-full px-2 py-0.5 text-xs ${
-                  client.is_onboarded
-                    ? "bg-green-500/15 text-green-300"
-                    : "bg-yellow-500/15 text-yellow-300"
-                }`}
-              >
-                {client.is_onboarded ? "Onboarded" : "Not Onboarded"}
+              <span className={`mt-2 mr-2 inline-flex rounded-full px-2 py-0.5 text-xs ${client.role === 'admin' ? 'bg-blue-500/15 text-blue-300' : 'bg-zinc-700/40 text-zinc-300'}`}>
+                {client.role === 'admin' ? 'Admin' : 'User'}
               </span>
+              {client.role !== 'admin' && (
+                <span
+                  className={`mt-2 inline-flex rounded-full px-2 py-0.5 text-xs ${
+                    client.is_onboarded
+                      ? "bg-green-500/15 text-green-300"
+                      : "bg-yellow-500/15 text-yellow-300"
+                  }`}
+                >
+                  {client.is_onboarded ? "Onboarded" : "Not Onboarded"}
+                </span>
+              )}
             </button>
           ))
         )}

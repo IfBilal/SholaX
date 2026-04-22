@@ -53,6 +53,7 @@ export interface DashboardData {
 	updated_at: string;
 }
 
+
 export interface Profile {
 	id: string;
 	email: string;
@@ -62,6 +63,7 @@ export interface Profile {
 	is_onboarded: boolean;
 	created_at: string;
 	updated_at: string;
+	role: 'user' | 'admin';
 }
 
 export interface ClientListItem {
@@ -70,4 +72,5 @@ export interface ClientListItem {
 	business_name: string | null;
 	is_onboarded: boolean;
 	created_at: string;
+	role: 'user' | 'admin';
 }

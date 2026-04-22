@@ -1,9 +1,11 @@
+
 import { redirect } from "next/navigation";
 import AdminDashboard from "@/components/admin/AdminDashboard";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function AdminPage() {
   const supabase = await createClient();
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -12,7 +14,13 @@ export default async function AdminPage() {
     redirect("/login?redirect=/admin");
   }
 
-  if (user.email?.toLowerCase() !== process.env.ADMIN_EMAIL?.toLowerCase()) {
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  if (!profile || profile.role !== "admin") {
     redirect("/dashboard");
   }
 

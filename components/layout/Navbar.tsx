@@ -60,23 +60,23 @@ export default function Navbar() {
     router.refresh();
   }
 
-  const dashboardLink = userEmail
-    ? { href: "/dashboard", label: "Dashboard" }
-    : { href: "/login", label: "Login" };
+  const navLinks = userEmail
+    ? [...links, { href: "/dashboard", label: "Dashboard" }]
+    : [...links, { href: "/dashboard", label: "Guest Dashboard" }, { href: "/login", label: "Login" }];
 
   if (isAuthPage) {
     return null;
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-(--border-subtle) bg-[rgba(10,11,13,0.72)] backdrop-blur-[16px]">
-      <nav className="mx-auto flex h-[72px] w-full max-w-[1440px] items-center justify-between px-5 md:px-8 lg:px-12">
+    <header className="sticky top-0 z-50 border-b border-(--border-subtle) bg-[rgba(10,11,13,0.72)] backdrop-blur-lg">
+      <nav className="mx-auto flex h-18 w-full max-w-360 items-center justify-between px-5 md:px-8 lg:px-12">
         <Link href="/" className="text-lg font-semibold text-primary">
           SholaX
         </Link>
 
         <ul className="hidden items-center gap-1 lg:flex">
-          {[...links, dashboardLink].map((link) => (
+          {navLinks.map((link) => (
             <li key={link.href}>
               <Link
                 href={link.href}
@@ -96,7 +96,7 @@ export default function Navbar() {
         <div className="hidden items-center gap-3 lg:flex">
           <Link
             href="/book-a-call"
-            className="inline-flex h-10 items-center rounded-md bg-accent px-4 text-sm font-medium text-[var(--text-inverse)] transition hover:bg-[var(--accent-hover)]"
+            className="inline-flex h-10 items-center rounded-md bg-accent px-4 text-sm font-medium text-(--text-inverse) transition hover:bg-(--accent-hover)"
           >
             Book a Call →
           </Link>
@@ -121,7 +121,7 @@ export default function Navbar() {
       {mobileOpen ? (
         <div className="border-t border-(--border-subtle) bg-surface-1 px-5 py-4 lg:hidden">
           <ul className="space-y-2">
-            {[...links, dashboardLink].map((link) => (
+            {navLinks.map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}
@@ -143,7 +143,7 @@ export default function Navbar() {
             <Link
               href="/book-a-call"
               onClick={() => setMobileOpen(false)}
-              className="inline-flex h-11 flex-1 items-center justify-center rounded-md bg-accent px-4 text-sm font-medium text-[var(--text-inverse)]"
+              className="inline-flex h-11 flex-1 items-center justify-center rounded-md bg-accent px-4 text-sm font-medium text-(--text-inverse)"
             >
               Book a Call →
             </Link>

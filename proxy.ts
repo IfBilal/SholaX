@@ -33,9 +33,17 @@ export async function proxy(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const pathname = request.nextUrl.pathname;
-  const adminEmail = process.env.ADMIN_EMAIL?.toLowerCase() ?? "";
-  const userEmail = user?.email?.toLowerCase() ?? "";
-  const isAdmin = Boolean(user && userEmail === adminEmail);
+
+  // Determine admin status from the profiles table (role column)
+  let isAdmin = false;
+  if (user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+    isAdmin = profile?.role === "admin";
+  }
 
   if (pathname.startsWith("/admin")) {
     if (!user) {

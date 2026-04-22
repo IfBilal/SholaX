@@ -21,8 +21,6 @@ const companyLinks = [
 ];
 
 const resourceLinks = [
-  { href: "/automations", label: "Library" },
-  { href: "/insights", label: "Changelog" },
   { href: "/insights", label: "Privacy" },
   { href: "/insights", label: "Terms" },
 ];
