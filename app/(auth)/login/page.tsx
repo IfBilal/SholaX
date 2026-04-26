@@ -50,9 +50,13 @@ export default function LoginPage() {
       }
 
       if (!data.session) {
-        setMessage(
-          "Account created. Please verify your email, then log in to continue onboarding.",
-        );
+        if (data.user?.identities?.length === 0) {
+          setError("An account with this email already exists. Please log in.");
+        } else {
+          setMessage(
+            "Account created! A verification email has been sent. Please verify your email, then log in.",
+          );
+        }
         setIsLoading(false);
         return;
       }
