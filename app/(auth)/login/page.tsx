@@ -17,8 +17,6 @@ export default function LoginPage() {
       ? "/dashboard"
       : queryParams?.get("redirect") || "/dashboard";
 
-  const confirmationState = queryParams?.get("confirmed");
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSignUpMode, setIsSignUpMode] = useState(false);
@@ -39,7 +37,7 @@ export default function LoginPage() {
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth/confirm?next=/login`,
+          emailRedirectTo: `${window.location.origin}/auth/confirm?next=/email-verified`,
         },
       });
 
@@ -153,17 +151,6 @@ export default function LoginPage() {
 
           {error ? <p className="text-sm text-red-400">{error}</p> : null}
           {message ? <p className="text-sm text-green-400">{message}</p> : null}
-          {!message && confirmationState === "1" ? (
-            <p className="text-sm text-green-400">
-              Email confirmed successfully. Please log in to continue.
-            </p>
-          ) : null}
-          {!message && confirmationState === "0" ? (
-            <p className="text-sm text-red-400">
-              Email confirmation link is invalid or expired. Please request a new one.
-            </p>
-          ) : null}
-
           <button
             type="submit"
             disabled={isLoading}
