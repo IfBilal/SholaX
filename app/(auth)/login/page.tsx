@@ -37,7 +37,7 @@ export default function LoginPage() {
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth/confirm?next=/email-verified`,
+          emailRedirectTo: `${window.location.origin}/email-verified`,
         },
       });
 
