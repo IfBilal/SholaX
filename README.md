@@ -2,7 +2,7 @@
 
 > **A Next.js Marketing Site and Mock Client Dashboard**
 
-SholaX is a Next.js application MVP that provides a marketing site, client dashboard, and admin portal with UI mockups and basic user management.
+SholaX is a comprehensive web platform built to handle agency and client operations. It features a public-facing marketing site with UI mockups of automation systems, a secure client portal with data visualization via Recharts for tracking ad metrics, and a role-based admin panel. The application is powered by Next.js (App Router), styled with Tailwind CSS v4, and relies on Supabase for robust authentication and database management.
 
 The platform is split into three core zones:
 1. **Public Marketing Site:** Landing pages showcasing services and systems. Note: The "9 production systems" and "AI Receptionist" features advertised on the site are UI mockups using hardcoded data and do not contain actual automated API calls.
